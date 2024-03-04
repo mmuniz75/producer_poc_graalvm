@@ -1,4 +1,5 @@
 Prereqs:
+- Edit the hosts file of your SO to host.kafka.local point to your local ip
 - In local Kafka edit server.properties adding the entry :
       listeners=PLAINTEXT://host.kafka.local:9092
   
