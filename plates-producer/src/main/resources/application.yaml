@@ -1,0 +1,20 @@
+server.port: 8085
+
+spring.kafka:
+    bootstrap-servers: host.kafka.local:9092
+    listener.ack-mode: manual_immediate
+
+    properties:
+        schema.registry.url: http://localhost:8081
+
+    producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer
+
+    consumer:
+        group-id: muniz_local
+        key-deserializer:  org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
+        auto-offset-reset: latest
+        enable-auto-commit: false
+        isolation-level: read_committed

@@ -1,0 +1,95 @@
+buildscript {
+    ext {
+        spring_boot_version = "3.2.0"
+        springCloudVersion = "2023.0.0"
+    }
+ /*   dependencies {
+        classpath 'kr.motd.maven:os-maven-plugin:1.6.2'
+    }*/
+}
+
+plugins {
+    id "org.springframework.boot" version "$spring_boot_version"
+    id "io.spring.dependency-management" version "1.0.15.RELEASE"
+    id "java"
+    id 'org.graalvm.buildtools.native' version '0.9.28'
+    id "io.freefair.lombok" version "8.3"
+    //id 'com.google.protobuf' version '0.9.4'
+}
+
+group = "plates-producer"
+version = "0.0.1-beta"
+sourceCompatibility = JavaVersion.VERSION_17
+
+// noinspection GroovyAssignabilityCheck
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
+}
+
+dependencies {
+
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+
+    //Kafka
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation 'io.confluent:kafka-protobuf-serializer:7.4.0'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+graalvmNative {
+    binaries.all {
+        buildArgs.add("-Ob")
+        buildArgs.add("-H:+ReportExceptionStackTraces")
+
+        buildArgs.add("--enable-url-protocols=https")
+        buildArgs.add("--initialize-at-build-time=ch.qos.logback.classic")
+        buildArgs.add("--initialize-at-build-time=ch.qos.logback.core.util")
+        buildArgs.add("--initialize-at-build-time=ch.qos.logback.core")
+        buildArgs.add("--initialize-at-build-time=org.apache.commons.logging.LogFactory")
+
+        buildArgs.add("--initialize-at-run-time=io.grpc.netty.shaded.io.netty.handler.ssl")
+        buildArgs.add("--initialize-at-run-time=io.grpc.netty.shaded.io.netty.internal.tcnative")
+
+        buildArgs.add("--initialize-at-build-time=com.google.common.base")
+        buildArgs.add("--initialize-at-build-time=com.google.common.io")
+        buildArgs.add("--initialize-at-build-time=com.google.protobuf")
+        buildArgs.add("--initialize-at-build-time=com.google.common.math")
+        buildArgs.add("--initialize-at-build-time=com.google.gson")
+    }
+}
+
+/*
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.2'
+    }
+
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.51.0'
+        }
+    }
+
+}
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/protobuf'
+        }
+
+    }
+}
+
+generateProto.dependsOn clean
+generateProto.enabled = false*/
