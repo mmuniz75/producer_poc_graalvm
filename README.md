@@ -24,8 +24,8 @@ Steps to reproduce the issue:
 
 - ./plates-producer/build/native/nativeCompile/./plates-producer
 
-The issue is not in consumer is the producer.
-Because producer not send the correct protobug to Kafka consumer will throw this error :
+The issue is not in consumer is in the producer.
+Because producer not send the correct protobuf to Kafka consumer it will throw this error :
 
 2024-03-04T11:50:18.795-03:00 ERROR 19412 --- [ntainer#0-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : Consumer exception
 
